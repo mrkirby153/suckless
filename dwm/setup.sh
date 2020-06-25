@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Setting up ST"
+echo "Setting up dwm"
 
 if [ -f source/config.h ]; then
     echo "backing up config.h"
