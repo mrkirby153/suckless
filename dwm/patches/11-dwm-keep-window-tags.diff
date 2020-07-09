@@ -1,0 +1,28 @@
+From 7f0c373798ec087c1770837ed81bcc5b8dd97887 Mon Sep 17 00:00:00 2001
+From: mrkirby153 <mr.austinwhyte@gmail.com>
+Date: Wed, 8 Jul 2020 18:10:43 -0700
+Subject: [PATCH] Keep window tags when switching monitors
+
+---
+ dwm.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/dwm.c b/dwm.c
+index d7cbef6..0d0b390 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -1751,7 +1751,10 @@ sendmon(Client *c, Monitor *m)
+ 	detach(c);
+ 	detachstack(c);
+ 	c->mon = m;
+-	c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
++	// Keep tags of apps when moving monitors except when floating
++	if(c->isfloating) {
++		c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
++	}
+ 	attach(c);
+ 	attachstack(c);
+ 	focus(NULL);
+-- 
+2.27.0
+
