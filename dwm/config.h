@@ -53,11 +53,13 @@ static const Rule rules[] = {
     {"vorta",           NULL,           NULL,       0,          1,          0,			0,			-1},
     {"Galculator",      NULL,           NULL,       0,          1,          0,			0,			-1},
     {"Thunderbird",     "Msgcompose",   NULL,       0,          1,          0,			0,			-1},
+    {"zoom",            NULL,           NULL,       TAG_7_MASK, 0,          0,          0,           2},
+    {"zoom",            NULL,           "Polls",    TAG_7_MASK, 1,          0,          0,           2},
 
     // Tag assignments
-    {NULL,              "discord",      NULL,       TAG_8_MASK, 0,          0,			0,			-1},
-    {NULL,              "Mail",         NULL,       TAG_8_MASK, 0,          0,			0,			-1},
-    {"Spotify",         NULL,           NULL,       TAG_9_MASK, 0,          0,			0,			-1},
+    {NULL,              "discord",      NULL,       TAG_8_MASK, 0,          0,			0,			 -1},
+    {NULL,              "Mail",         NULL,       TAG_8_MASK, 0,          0,			0,			 -1},
+    {"Spotify",         NULL,           NULL,       TAG_9_MASK, 0,          0,			0,			 -1},
 
 	// Swallow
 	{ "St",      		NULL,     		NULL,       0,         	0,          1,          -1,        -1 },
