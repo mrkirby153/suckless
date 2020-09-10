@@ -63,11 +63,11 @@ static const Rule rules[] = {
 
     {"Spotify",         	NULL,           NULL,       TAG_MUSIC_MASK, 	0,			0,          0,			0,			-1 },
 
-	{ "St",      			NULL,     		NULL,       TAG_TERM_MASK,      1,			0,          1,          0,        	-1 },
+	{ "St",      			"st",     		NULL,       TAG_TERM_MASK,      1,			0,          1,          0,        	-1 },
 
 	{"firefox",				NULL,			NULL,		TAG_BROWSER_MASK,	1,			0,			0,			0,			-1 },
 
-	{"vscodium",			NULL,			NULL,		TAG_CODE_MASK,		1,			0,			0,			0,			-1 },
+	{"VSCodium",			NULL,			NULL,		TAG_CODE_MASK,		1,			0,			0,			0,			-1 },
 	{"jetbrains-idea",		NULL,			NULL,		TAG_CODE_MASK,		1,			0,			0,			0,			-1 },
 	{"jetbrains-phpstorm",	NULL,			NULL,		TAG_CODE_MASK,		1,			0,			0,			0,			-1 },
 
@@ -107,7 +107,7 @@ static const char *dmenucmd[] = { NULL };
 static const char *termcmd[]  = { "st", NULL };
 
 static const char scratchpadname[] = "scratchpad";
-static const char *scratchpadcmd[] = {"st", "-t", scratchpadname, "-g", "120x34", NULL};
+static const char *scratchpadcmd[] = {"st", "-t", scratchpadname, "-g", "120x34", "-c", "scratchpad", NULL};
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
