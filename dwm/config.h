@@ -29,40 +29,52 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+// 1- Firefox, 2- Terminal, 3- File Manager, 4- Code, 5- Game, 6- Movie, 7- Mail, 8- Discord, 9- Music
+static const char *tags[] = {"", "", "", "", "", "", "", "ﭮ", ""};
 
-#define TAG_1_MASK 1 << 0
-#define TAG_2_MASK 1 << 1
-#define TAG_3_MASK 1 << 2
-#define TAG_4_MASK 1 << 3
-#define TAG_5_MASK 1 << 4
-#define TAG_6_MASK 1 << 5
-#define TAG_7_MASK 1 << 6
-#define TAG_8_MASK 1 << 7
-#define TAG_9_MASK 1 << 8
+#define TAG_BROWSER_MASK 	1 << 0
+#define TAG_TERM_MASK 		1 << 1
+#define TAG_FILE_MASK 		1 << 2
+#define TAG_CODE_MASK 		1 << 3
+#define TAG_GAME_MASK 		1 << 4
+#define TAG_VIDEO_MASK 		1 << 5
+#define TAG_MAIL_MASK 		1 << 6
+#define TAG_DISCORD_MASK 	1 << 7
+#define TAG_MUSIC_MASK 		1 << 8
 
 static const Rule rules[] = {
     /* xprop(1):
      *	WM_CLASS(STRING) = instance, class
      *	WM_NAME(STRING) = title
      */
-    /* class            instance        title       tags mask   switchtotag	isfloating	isterminal	noswallow	monitor */
+    /* class            	instance        title       tags mask   		switchtotag	isfloating	isterminal	noswallow	monitor */
+    {"Pavucontrol",     	NULL,           NULL,       0,          		0,			1,          0, 			0, 			-1 },
+    {"vorta",           	NULL,           NULL,       0,          		0,			1,          0,			0,			-1 },
+    {"Galculator",      	NULL,           NULL,       0,          		0,			1,          0,			0,			-1 },
+    {"Thunderbird",     	"Msgcompose",   NULL,       0,          		0,			1,          0,			0,			-1 },
 
-    // Floating windows
-    {"Pavucontrol",     NULL,           NULL,       0,          0,			1,          0, 			0, 			-1},
-    {"vorta",           NULL,           NULL,       0,          0,			1,          0,			0,			-1},
-    {"Galculator",      NULL,           NULL,       0,          0,			1,          0,			0,			-1},
-    {"Thunderbird",     "Msgcompose",   NULL,       0,          0,			1,          0,			0,			-1},
-    {"zoom",            NULL,           NULL,       TAG_7_MASK, 0,			0,          0,          0,           2},
-    {"zoom",            NULL,           "Polls",    TAG_7_MASK, 0,			1,          0,          0,           2},
+    {"zoom",            	NULL,           NULL,       TAG_VIDEO_MASK, 	0,			0,          0,          0,           2 },
+    {"zoom",            	NULL,           "Polls",    TAG_VIDEO_MASK, 	0,			1,          0,          0,           2 },
+	{"vlc",					NULL,			NULL,		TAG_VIDEO_MASK,		0,			0,			0,			0,			-1 },
 
-    // Tag assignments
-    {NULL,              "discord",      NULL,       TAG_8_MASK, 0,			0,          0,			0,			 -1},
-    {NULL,              "Mail",         NULL,       TAG_8_MASK, 0,			0,          0,			0,			 -1},
-    {"Spotify",         NULL,           NULL,       TAG_9_MASK, 0,			0,          0,			0,			 -1},
+    {NULL,              	"discord",      NULL,       TAG_DISCORD_MASK, 	0,			0,          0,			0,			-1 },
 
-	// Swallow
-	{ "St",      		NULL,     		NULL,       0,         	0,			0,          1,          -1,        -1 },
+    {"Thunderbird",     	NULL,         	NULL,       TAG_MAIL_MASK, 		0,			0,          0,			0,			 1 },
+
+    {"Spotify",         	NULL,           NULL,       TAG_MUSIC_MASK, 	0,			0,          0,			0,			-1 },
+
+	{ "St",      			NULL,     		NULL,       TAG_TERM_MASK,      1,			0,          1,          0,        	-1 },
+
+	{"firefox",				NULL,			NULL,		TAG_BROWSER_MASK,	1,			0,			0,			0,			-1 },
+
+	{"vscodium",			NULL,			NULL,		TAG_CODE_MASK,		1,			0,			0,			0,			-1 },
+	{"jetbrains-idea",		NULL,			NULL,		TAG_CODE_MASK,		1,			0,			0,			0,			-1 },
+	{"jetbrains-phpstorm",	NULL,			NULL,		TAG_CODE_MASK,		1,			0,			0,			0,			-1 },
+
+	{"St",					NULL,			"ranger",	TAG_FILE_MASK,		1,			0,			0,			0,			-1 },
+	{"Thunar",				NULL,			NULL,		TAG_FILE_MASK,		1,			0,			0,			0,			-1 },
+
+	{"Lutris",				NULL,			NULL,		TAG_GAME_MASK,		1,			0,			0,			0,			-1 },
 };
 
 /* layout(s) */
