@@ -61,6 +61,7 @@ static const Rule rules[] = {
     {NULL,              	"discord",      NULL,       TAG_DISCORD_MASK, 	0,			0,          0,			0,			-1 },
 
     {"Thunderbird",     	NULL,         	NULL,       TAG_MAIL_MASK, 		0,			0,          0,			0,			 1 },
+    {"mail",				NULL,			NULL,		TAG_MAIL_MASK,		0,			0,			0,			0,			 1 },
 
     {"Spotify",         	NULL,           NULL,       TAG_MUSIC_MASK, 	0,			0,          0,			0,			-1 },
 
