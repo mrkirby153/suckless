@@ -56,12 +56,13 @@ static const Rule rules[] = {
 
     {"zoom",            	NULL,           NULL,       TAG_VIDEO_MASK, 	0,			0,          0,          0,           2 },
     {"zoom",            	NULL,           "Polls",    TAG_VIDEO_MASK, 	0,			1,          0,          0,           2 },
-	{"vlc",					NULL,			NULL,		TAG_VIDEO_MASK,		0,			0,			0,			0,			-1 },
+	{"vlc",					NULL,			NULL,		TAG_VIDEO_MASK,		1,			0,			0,			0,			-1 },
+	{"mpv",					NULL,			NULL,		TAG_VIDEO_MASK,		1,			0,			0,			0,			-1 },
 
     {NULL,              	"discord",      NULL,       TAG_DISCORD_MASK, 	0,			0,          0,			0,			-1 },
 
     {"Thunderbird",     	NULL,         	NULL,       TAG_MAIL_MASK, 		0,			0,          0,			0,			 1 },
-    {"mail",				NULL,			NULL,		TAG_MAIL_MASK,		0,			0,			0,			0,			 1 },
+    {"mail",				NULL,			NULL,		TAG_MAIL_MASK,		1,			0,			0,			0,			-1 },
 
     {"Spotify",         	NULL,           NULL,       TAG_MUSIC_MASK, 	0,			0,          0,			0,			-1 },
 
@@ -77,6 +78,7 @@ static const Rule rules[] = {
 	{"Thunar",				NULL,			NULL,		TAG_FILE_MASK,		1,			0,			0,			0,			-1 },
 
 	{"Lutris",				NULL,			NULL,		TAG_GAME_MASK,		1,			0,			0,			0,			-1 },
+    {NULL,                  NULL,           "Event Tester", 0,              0,          0,          0,          1,          -1 },
 };
 
 /* layout(s) */
