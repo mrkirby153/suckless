@@ -74,7 +74,7 @@ static const Rule rules[] = {
 	{"jetbrains-idea",		NULL,			NULL,		TAG_CODE_MASK,		1,			0,			0,			0,			-1 },
 	{"jetbrains-phpstorm",	NULL,			NULL,		TAG_CODE_MASK,		1,			0,			0,			0,			-1 },
 
-	{"St",					NULL,			"ranger",	TAG_FILE_MASK,		1,			0,			0,			0,			-1 },
+	{"ranger",				NULL,	    	NULL,   	TAG_FILE_MASK,		1,			0,			0,			0,			-1 },
 	{"Thunar",				NULL,			NULL,		TAG_FILE_MASK,		1,			0,			0,			0,			-1 },
 
 	{"Lutris",				NULL,			NULL,		TAG_GAME_MASK,		1,			0,			0,			0,			-1 },
