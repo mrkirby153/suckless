@@ -1,0 +1,151 @@
+From 2a61f9f4325bcae1a8eb728a45978cafe728736e Mon Sep 17 00:00:00 2001
+From: mrkirby153 <mr.austinwhyte@gmail.com>
+Date: Sat, 2 Jan 2021 19:58:37 -0800
+Subject: [PATCH] Clickable statusbar
+
+---
+ dwm.c | 71 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 69 insertions(+), 2 deletions(-)
+
+diff --git a/dwm.c b/dwm.c
+index 07a83d3..af777d5 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -216,6 +216,7 @@ static void clientmessage(XEvent *e);
+ static void configure(Client *c);
+ static void configurenotify(XEvent *e);
+ static void configurerequest(XEvent *e);
++static void copyvalidchars(char *text, char *rawtext);
+ static Monitor *createmon(void);
+ static void destroynotify(XEvent *e);
+ static void detach(Client *c);
+@@ -234,6 +235,7 @@ static int getrootptr(int *x, int *y);
+ static long getstate(Window w);
+ static unsigned int getsystraywidth();
+ static int gettextprop(Window w, Atom atom, char *text, unsigned int size);
++static int getdwmblockspid();
+ static void grabbuttons(Client *c, int focused);
+ static void grabkeys(void);
+ static void incnmaster(const Arg *arg);
+@@ -284,6 +286,7 @@ static void showhide(Client *c);
+ static void sigchld(int unused);
+ static void sighup(int unused);
+ static void sigterm(int unused);
++static void sigdwmblocks(const Arg *arg);
+ static void spawn(const Arg *arg);
+ static Monitor *systraytomon(Monitor *m);
+ static void tag(const Arg *arg);
+@@ -320,6 +323,7 @@ static int xerrordummy(Display *dpy, XErrorEvent *ee);
+ static int xerrorstart(Display *dpy, XErrorEvent *ee);
+ static void xrdb(const Arg *arg);
+ static void zoom(const Arg *arg);
++static void copyvalidchars(char *text, char *rawtext);
+ 
+ static pid_t getparentprocess(pid_t p);
+ static int isdescprocess(pid_t p, pid_t c);
+@@ -331,12 +335,15 @@ static pid_t winpid(Window w);
+ static Systray *systray =  NULL;
+ static const char broken[] = "broken";
+ static char stext[256];
++static char rawstext[256];
+ static int scanner;
+ static int screen;
+ static int sw, sh;           /* X display screen geometry width, height */
+ static int bh, blw = 0;      /* bar geometry */
+ static int enablegaps = 1;   /* enables gaps, used by togglegaps */
+ static int lrpad;            /* sum of left and right padding for text */
++static int dwmblockssig;
++static int dwmblockspid;
+ static int (*xerrorxlib)(Display *, XErrorEvent *);
+ static unsigned int numlockmask = 0;
+ static void (*handler[LASTEvent]) (XEvent *) = {
+@@ -613,8 +620,26 @@ buttonpress(XEvent *e)
+ 			arg.ui = 1 << i;
+ 		} else if (ev->x < x + blw)
+ 			click = ClkLtSymbol;
+-		else if (ev->x > selmon->ww - (int) TEXTW(stext) - getsystraywidth())
++		else if (ev->x > (x = selmon->ww - (int) TEXTW(stext) - getsystraywidth() + lrpad)) {
+ 			click = ClkStatusText;
++
++			char *text = rawstext;
++			int i = -1;
++			char ch;
++			dwmblockssig = 0;
++			while(text[++i]) {
++				if((unsigned char) text[i] < ' ') {
++					ch = text[i];
++					text[i] = '\0';
++					x += TEXTW(text) - lrpad;
++					text[i] = ch;
++					text += i + 1;
++					i = -1;
++					if (x >= ev->x) break;
++					dwmblockssig = ch;
++				}
++			}
++		}
+ 		else
+ 			click = ClkWinTitle;
+ 	} else if ((c = wintoclient(ev->window))) {
+@@ -629,6 +654,46 @@ buttonpress(XEvent *e)
+ 			buttons[i].func(click == ClkTagBar && buttons[i].arg.i == 0 ? &arg : &buttons[i].arg);
+ }
+ 
++void
++copyvalidchars(char *text, char *rawtext) {
++	int i = -1, j = 0;
++	while(rawtext[++i]) {
++		if((unsigned char) rawtext[i] >= ' ') {
++			text[j++] = rawtext[i];
++		}
++	}
++	text[j] = '\0';
++}
++
++void
++sigdwmblocks(const Arg *arg) {
++	fprintf(stderr, "Signalling dwmblocks. dwmblockssig = %d, i = %d", dwmblockssig, arg->i);
++	union sigval sv;
++	sv.sival_int = (dwmblockssig << 8) | arg->i;
++	if(!dwmblockspid) {
++		if(getdwmblockspid() == -1) {
++			return;
++		}
++	}
++	if(sigqueue(dwmblockspid, SIGUSR1, sv) == -1) {
++		if(errno == ESRCH) {
++			if(!getdwmblockspid()) {
++				sigqueue(dwmblockspid, SIGUSR1, sv);
++			}
++		}
++	}
++}
++
++int getdwmblockspid() {
++	char buff[16];
++	FILE *fp = popen("pidof -s dwmblocks", "r");
++	fgets(buff, sizeof(buff), fp);
++	pid_t pid = strtoul(buff, NULL, 10);
++	pclose(fp);
++	dwmblockspid = pid;
++	return pid != 0? 0 : -1;
++}
++
+ void
+ checkotherwm(void)
+ {
+@@ -2674,8 +2739,10 @@ updatesizehints(Client *c)
+ void
+ updatestatus(void)
+ {
+-	if (!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
++	if (!gettextprop(root, XA_WM_NAME, rawstext, sizeof(stext)))
+ 		strcpy(stext, "dwm-"VERSION);
++	else
++		copyvalidchars(stext, rawstext);
+ 	drawbar(selmon);
+ 	updatesystray();
+ }
+-- 
+2.28.0
+
