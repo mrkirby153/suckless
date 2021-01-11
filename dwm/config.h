@@ -54,8 +54,8 @@ static const Rule rules[] = {
     {"Galculator",      	NULL,           NULL,       0,          		0,			1,          0,			0,			-1 },
     {"Thunderbird",     	"Msgcompose",   NULL,       0,          		0,			1,          0,			0,			-1 },
 
-    {"zoom",            	NULL,           NULL,       TAG_VIDEO_MASK, 	0,			0,          0,          0,           2 },
-    {"zoom",            	NULL,           "Polls",    TAG_VIDEO_MASK, 	0,			1,          0,          0,           2 },
+    {"zoom",            	NULL,           NULL,       TAG_VIDEO_MASK, 	0,			0,          0,          0,          -1 },
+    {"zoom",            	NULL,           "Polls",    TAG_VIDEO_MASK, 	0,			1,          0,          0,          -1 },
 	{"vlc",					NULL,			NULL,		TAG_VIDEO_MASK,		1,			0,			0,			0,			-1 },
 	{"mpv",					NULL,			NULL,		TAG_VIDEO_MASK,		1,			0,			0,			0,			-1 },
 
