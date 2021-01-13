@@ -1,0 +1,49 @@
+From 7e0321519c10b05b3b117b737710e28f4d4a70bd Mon Sep 17 00:00:00 2001
+From: mrkirby153 <mr.austinwhyte@gmail.com>
+Date: Tue, 12 Jan 2021 22:00:06 -0800
+Subject: [PATCH] Clickable statusbar with systray
+
+---
+ dwm.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/dwm.c b/dwm.c
+index af777d5..43d71b7 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -594,6 +594,23 @@ unswallow(Client *c)
+ 	arrange(c->mon);
+ }
+ 
++int
++systray_offset(Monitor *mon) {
++	// If the systray is on this monitor, we should return the systray width, else return 0
++	if(!systraypinning) {
++		return getsystraywidth(); // The systray is always on the monitor
++	}
++
++	// Figure out which monitor the systray should be on
++	Monitor *t;
++	int i, n;
++	for(n = 1, t = mons; t && t->next; n++, t = t->next) ;
++	for(i = 1, t = mons; t && t->next && i < systraypinning; i++, t = t->next) ;
++	if(systraypinningfailfirst && n < systraypinning)
++		t = mons;
++	return t->num == mon->num ? getsystraywidth() : 0;
++}
++
+ void
+ buttonpress(XEvent *e)
+ {
+@@ -620,7 +637,7 @@ buttonpress(XEvent *e)
+ 			arg.ui = 1 << i;
+ 		} else if (ev->x < x + blw)
+ 			click = ClkLtSymbol;
+-		else if (ev->x > (x = selmon->ww - (int) TEXTW(stext) - getsystraywidth() + lrpad)) {
++		else if (ev->x > (x = selmon->ww - (int) TEXTW(stext) - systray_offset(m) + lrpad)) {
+ 			click = ClkStatusText;
+ 
+ 			char *text = rawstext;
+-- 
+2.28.0
+
