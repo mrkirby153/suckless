@@ -32,6 +32,7 @@ static char *colors[][3] = {
 /* tagging */
 // 1- Firefox, 2- Terminal, 3- File Manager, 4- Code, 5- Game, 6- Movie, 7- Mail, 8- Discord, 9- Music
 static const char *tags[] = {"", "", "", "", "", "", "", "ﭮ", ""};
+static const char *alttags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
 #define TAG_BROWSER_MASK 	1 << 0
 #define TAG_TERM_MASK 		1 << 1
@@ -71,6 +72,7 @@ static const Rule rules[] = {
 	{"firefox",				NULL,			NULL,		TAG_BROWSER_MASK,	1,			0,			0,			0,			-1 },
 
 	{"VSCodium",			NULL,			NULL,		TAG_CODE_MASK,		1,			0,			0,			0,			-1 },
+	{"Code",    			NULL,			NULL,		TAG_CODE_MASK,		1,			0,			0,			0,			-1 },
 	{"jetbrains-idea",		NULL,			NULL,		TAG_CODE_MASK,		1,			0,			0,			0,			-1 },
 	{"jetbrains-phpstorm",	NULL,			NULL,		TAG_CODE_MASK,		1,			0,			0,			0,			-1 },
 
@@ -78,6 +80,7 @@ static const Rule rules[] = {
 	{"Thunar",				NULL,			NULL,		TAG_FILE_MASK,		1,			0,			0,			0,			-1 },
 
 	{"Lutris",				NULL,			NULL,		TAG_GAME_MASK,		1,			0,			0,			0,			-1 },
+    {"Steam",               NULL,           NULL,       TAG_GAME_MASK,      0,          0,          0,          0,          -1 },
     {NULL,                  NULL,           "Event Tester", 0,              0,          0,          0,          1,          -1 },
 };
 
