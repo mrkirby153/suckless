@@ -78,6 +78,7 @@ static const Rule rules[] = {
 
 	{"ranger",				NULL,	    	NULL,   	TAG_FILE_MASK,		1,			0,			0,			0,			-1 },
 	{"Thunar",				NULL,			NULL,		TAG_FILE_MASK,		1,			0,			0,			0,			-1 },
+    {"Filezilla",           NULL,           NULL,       TAG_FILE_MASK,      1,          0,          0,          0,          -1 },
 
 	{"Lutris",				NULL,			NULL,		TAG_GAME_MASK,		1,			0,			0,			0,			-1 },
     {"Steam",               NULL,           NULL,       TAG_GAME_MASK,      0,          0,          0,          0,          -1 },
