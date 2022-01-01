@@ -14,7 +14,7 @@ cd source
 
 # reset everything
 echo "Cleaning up working tree"
-git reset --hard origin/master
+git reset --hard HEAD
 git clean -df *
 
 echo "Applying patches"
