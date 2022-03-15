@@ -54,6 +54,7 @@ static const Rule rules[] = {
     {"vorta",           	NULL,           NULL,       0,          		0,			1,          0,			0,			-1 },
     {"Galculator",      	NULL,           NULL,       0,          		0,			1,          0,			0,			-1 },
     {"Thunderbird",     	"Msgcompose",   NULL,       0,          		0,			1,          0,			0,			-1 },
+    {"fehfloat",            NULL,           NULL,       0,                  0,          1,          0,          0,          -1 },
 
     {"zoom",            	NULL,           NULL,       TAG_VIDEO_MASK, 	0,			0,          0,          0,          -1 },
     {"zoom",            	NULL,           "Polls",    TAG_VIDEO_MASK, 	0,			1,          0,          0,          -1 },
