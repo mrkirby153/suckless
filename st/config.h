@@ -6,6 +6,10 @@
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
 static char *font = "SauceCodePro Nerd Font:size=11:antialias=true:autohint=true";
+/* Spare fonts */
+static char *font2[] = {
+	"DejaVu Sans Mono:size=11:antialias=true:autohint=true",
+};
 static int borderpx = 2;
 
 /*
