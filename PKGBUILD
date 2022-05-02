@@ -15,7 +15,7 @@ pkgrel=1
 arch=('any')
 license=('MIT')
 makedepends=('git' 'make' 'fontconfig' 'freetype2' 'xorgproto' 'libxft-bgra' 'libxinerama') # 'bzr', 'git', 'mercurial' or 'subversion'
-source=('suckless::git://github.com/mrkirby153/suckless.git')
+source=('suckless::git+https://github.com/mrkirby153/suckless.git')
 noextract=()
 md5sums=('SKIP')
 
