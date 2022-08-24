@@ -1,17 +1,29 @@
-diff -up dmenu-4.9-b/config.def.h dmenu-4.9-a/config.def.h
---- dmenu-4.9-b/config.def.h	2019-02-02 13:55:02.000000000 +0100
-+++ dmenu-4.9-a/config.def.h	2019-05-19 02:10:12.740040403 +0200
-@@ -21,3 +21,6 @@ static unsigned int lines      = 0;
+From e39f35bb07995da8d5c735011501724a8f1af05e Mon Sep 17 00:00:00 2001
+From: mrkirby153 <mr.austinwhyte@gmail.com>
+Date: Tue, 23 Aug 2022 23:14:39 -0700
+Subject: [PATCH] dmenu border patch
+
+---
+ config.def.h | 3 +++
+ dmenu.c      | 3 ++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/config.def.h b/config.def.h
+index 4fe84dc..7308bae 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -24,3 +24,6 @@ static unsigned int lines      = 0;
   * for example: " /?\"&[]"
   */
  static const char worddelimiters[] = " ";
 +
 +/* Size of the window border */
 +static const unsigned int border_width = 5;
-diff -up dmenu-4.9-b/dmenu.c dmenu-4.9-a/dmenu.c
---- dmenu-4.9-b/dmenu.c	2019-02-02 13:55:02.000000000 +0100
-+++ dmenu-4.9-a/dmenu.c	2019-05-19 02:11:20.966710117 +0200
-@@ -654,9 +654,10 @@ setup(void)
+diff --git a/dmenu.c b/dmenu.c
+index 7476e43..5fab736 100644
+--- a/dmenu.c
++++ b/dmenu.c
+@@ -769,9 +769,10 @@ setup(void)
  	swa.override_redirect = True;
  	swa.background_pixel = scheme[SchemeNorm][ColBg].pixel;
  	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
@@ -22,4 +34,7 @@ diff -up dmenu-4.9-b/dmenu.c dmenu-4.9-a/dmenu.c
 +	XSetWindowBorder(dpy, win, scheme[SchemeSel][ColBg].pixel);
  	XSetClassHint(dpy, win, &ch);
  
- 	/* open input methods */
+ 
+-- 
+2.37.2
+

@@ -1,26 +1,36 @@
-diff '--color=auto' -up ../dmenu-4.9/dmenu.c ./dmenu.c
---- ../dmenu-4.9/dmenu.c	2019-02-02 13:55:02.000000000 +0100
-+++ ./dmenu.c	2020-05-24 00:27:58.038586112 +0200
-@@ -15,6 +15,7 @@
+From 30d1a4fb2be3848b142b112e82952e779566664a Mon Sep 17 00:00:00 2001
+From: mrkirby153 <mr.austinwhyte@gmail.com>
+Date: Tue, 23 Aug 2022 23:15:37 -0700
+Subject: [PATCH] Xresources patch
+
+---
+ dmenu.c | 76 +++++++++++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 68 insertions(+), 8 deletions(-)
+
+diff --git a/dmenu.c b/dmenu.c
+index 5fab736..3a9b6be 100644
+--- a/dmenu.c
++++ b/dmenu.c
+@@ -16,6 +16,7 @@
  #include <X11/extensions/Xinerama.h>
  #endif
  #include <X11/Xft/Xft.h>
 +#include <X11/Xresource.h>
-
+ 
  #include "drw.h"
  #include "util.h"
-@@ -53,6 +54,10 @@ static XIC xic;
+@@ -55,6 +56,10 @@ static XIC xic;
  static Drw *drw;
  static Clr *scheme[SchemeLast];
-
+ 
 +/* Temporary arrays to allow overriding xresources values */
 +static char *colortemp[4];
 +static char *tempfonts;
 +
  #include "config.h"
-
+ 
  static int (*fstrncmp)(const char *, const char *, size_t) = strncmp;
-@@ -596,8 +601,13 @@ setup(void)
+@@ -697,8 +702,13 @@ setup(void)
  	int a, di, n, area = 0;
  #endif
  	/* init appearance */
@@ -33,13 +43,13 @@ diff '--color=auto' -up ../dmenu-4.9/dmenu.c ./dmenu.c
 +		for (i = 0; i < 2; ++i)
 +			free(colors[j][i]);
 +	}
-
+ 
  	clip = XInternAtom(dpy, "CLIPBOARD",   False);
  	utf8 = XInternAtom(dpy, "UTF8_STRING", False);
-@@ -687,6 +697,41 @@ usage(void)
+@@ -805,6 +815,41 @@ usage(void)
  	exit(1);
  }
-
+ 
 +void
 +readxresources(void) {
 +	XrmInitialize();
@@ -78,7 +88,7 @@ diff '--color=auto' -up ../dmenu-4.9/dmenu.c ./dmenu.c
  int
  main(int argc, char *argv[])
  {
-@@ -715,15 +760,15 @@ main(int argc, char *argv[])
+@@ -837,15 +882,15 @@ main(int argc, char *argv[])
  		else if (!strcmp(argv[i], "-p"))   /* adds prompt to left of input field */
  			prompt = argv[++i];
  		else if (!strcmp(argv[i], "-fn"))  /* font or font set */
@@ -99,7 +109,7 @@ diff '--color=auto' -up ../dmenu-4.9/dmenu.c ./dmenu.c
  		else if (!strcmp(argv[i], "-w"))   /* embedding window id */
  			embed = argv[++i];
  		else
-@@ -743,8 +788,23 @@ main(int argc, char *argv[])
+@@ -863,8 +908,23 @@ main(int argc, char *argv[])
  		die("could not get embedding window attributes: 0x%lx",
  		    parentwin);
  	drw = drw_create(dpy, screen, root, wa.width, wa.height);
@@ -122,5 +132,8 @@ diff '--color=auto' -up ../dmenu-4.9/dmenu.c ./dmenu.c
 +
 +	free(fonts[0]);
  	lrpad = drw->fonts->h;
-
+ 
  #ifdef __OpenBSD__
+-- 
+2.37.2
+
