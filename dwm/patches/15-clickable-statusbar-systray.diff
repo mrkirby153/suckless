@@ -1,18 +1,18 @@
-From 7e0321519c10b05b3b117b737710e28f4d4a70bd Mon Sep 17 00:00:00 2001
+From fa82657498da51d659553be7dafe365662daf261 Mon Sep 17 00:00:00 2001
 From: mrkirby153 <mr.austinwhyte@gmail.com>
 Date: Tue, 12 Jan 2021 22:00:06 -0800
 Subject: [PATCH] Clickable statusbar with systray
 
 ---
- dwm.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ dwm.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
 diff --git a/dwm.c b/dwm.c
-index af777d5..43d71b7 100644
+index f79d9f0..0697aa8 100644
 --- a/dwm.c
 +++ b/dwm.c
-@@ -594,6 +594,23 @@ unswallow(Client *c)
- 	arrange(c->mon);
+@@ -528,6 +528,23 @@ attachstack(Client *c)
+ 	c->mon->stack = c;
  }
  
 +int
@@ -35,15 +35,16 @@ index af777d5..43d71b7 100644
  void
  buttonpress(XEvent *e)
  {
-@@ -620,7 +637,7 @@ buttonpress(XEvent *e)
+@@ -554,8 +571,7 @@ buttonpress(XEvent *e)
  			arg.ui = 1 << i;
- 		} else if (ev->x < x + blw)
+ 		} else if (ev->x < x + TEXTW(selmon->ltsymbol))
  			click = ClkLtSymbol;
+-
 -		else if (ev->x > (x = selmon->ww - (int) TEXTW(stext) - getsystraywidth() + lrpad)) {
 +		else if (ev->x > (x = selmon->ww - (int) TEXTW(stext) - systray_offset(m) + lrpad)) {
  			click = ClkStatusText;
  
  			char *text = rawstext;
 -- 
-2.28.0
+2.37.2
 

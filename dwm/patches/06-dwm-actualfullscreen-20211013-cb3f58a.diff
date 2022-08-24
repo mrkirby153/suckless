@@ -1,18 +1,21 @@
-From 80b160f8fcedb336a05ea670c79fac2b79a09f73 Mon Sep 17 00:00:00 2001
-From: mrkirby153 <mr.austinwhyte@gmail.com>
-Date: Sat, 13 Jun 2020 11:46:20 -0700
-Subject: [PATCH] Fullscreen patch
+From 5f6c0a3e4126e41b17fb01c65240eb82e2b3e634 Mon Sep 17 00:00:00 2001
+From: Soenke Lambert <s.lambert@mittwald.de>
+Date: Wed, 13 Oct 2021 18:21:09 +0200
+Subject: [PATCH] Fullscreen current window with [Alt]+[Shift]+[f]
 
+This actually fullscreens a window, instead of just hiding the statusbar
+and applying the monocle layout.
 ---
  config.def.h | 1 +
+ dwm.1        | 3 +++
  dwm.c        | 8 ++++++++
- 2 files changed, 9 insertions(+)
+ 3 files changed, 12 insertions(+)
 
 diff --git a/config.def.h b/config.def.h
-index 83e4a01..a026670 100644
+index a6253ca..6263555 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -102,6 +102,7 @@ static Key keys[] = {
+@@ -103,6 +103,7 @@ static const Key keys[] = {
  	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
  	{ MODKEY,                       XK_space,  setlayout,      {0} },
  	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
@@ -20,11 +23,25 @@ index 83e4a01..a026670 100644
  	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
  	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
  	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
+diff --git a/dwm.1 b/dwm.1
+index 0f3a6ba..11a8728 100644
+--- a/dwm.1
++++ b/dwm.1
+@@ -124,6 +124,9 @@ Zooms/cycles focused window to/from master area (tiled layouts only).
+ .B Mod1\-Shift\-c
+ Close focused window.
+ .TP
++.B Mod1\-Shift\-f
++Toggle fullscreen for focused window.
++.TP
+ .B Mod1\-Shift\-space
+ Toggle focused window between tiled and floating state.
+ .TP
 diff --git a/dwm.c b/dwm.c
-index 374746a..02b07b0 100644
+index 45e8929..a5253c0 100644
 --- a/dwm.c
 +++ b/dwm.c
-@@ -230,6 +230,7 @@ static void tile(Monitor *);
+@@ -232,6 +232,7 @@ static void tile(Monitor *m);
  static void togglebar(const Arg *arg);
  static void togglefloating(const Arg *arg);
  static void togglescratch(const Arg *arg);
@@ -32,7 +49,7 @@ index 374746a..02b07b0 100644
  static void toggletag(const Arg *arg);
  static void toggleview(const Arg *arg);
  static void unfocus(Client *c, int setfocus);
-@@ -1927,6 +1928,13 @@ togglescratch(const Arg *arg)
+@@ -2006,6 +2007,13 @@ togglescratch(const Arg *arg)
  		spawn(arg);
  }
  
@@ -47,5 +64,5 @@ index 374746a..02b07b0 100644
  toggletag(const Arg *arg)
  {
 -- 
-2.27.0
+2.37.2
 

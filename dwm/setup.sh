@@ -10,24 +10,32 @@ if [ -f source/config.h ]; then
 fi
 
 # Apply patches
-cd source
+pushd source
 
 # reset everything
 echo "Cleaning up working tree"
 git reset --hard HEAD
 git clean -df *
 
+if [ "$(git config commit.gpgsign)" != "false" ]; then
+    echo "Disabling gpg signing"
+    git config commit.gpgsign false
+fi
+
+popd
+
+echo "Resetting submodule"
+git submodule update source
+
+pushd source
+
 echo "Applying patches"
 
 for file in ../patches/*.diff; do
-    echo "Aplying $file"
-    patch -p1 < $file
+    git am -3 --whitespace=fix "$file"
 done
 
-echo "Cleaning up original files"
-find . -type f -name "*.orig" -exec rm {} +
-
-cd ..
+popd
 
 if [ -f config.h ]; then
     echo "restoring config.h"

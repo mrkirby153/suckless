@@ -1,25 +1,8 @@
-From 2991f37f0aaf44b9f9b11e7893ff0af8eb88f649 Mon Sep 17 00:00:00 2001
-From: Christopher Drelich <cd@cdrakka.com>
-Date: Wed, 23 May 2018 22:50:38 -0400
-Subject: [PATCH] Modifies quit to handle restarts and adds SIGHUP and SIGTERM
- handlers.
+From bc2fbbe723dd6514afd7b28d905e679651885ad0 Mon Sep 17 00:00:00 2001
+From: mrkirby153 <mr.austinwhyte@gmail.com>
+Date: Tue, 23 Aug 2022 21:15:49 -0700
+Subject: [PATCH] Restartsig patch
 
-Modified quit() to restart if it receives arg .i = 1
-MOD+CTRL+SHIFT+Q was added to confid.def.h to do just that.
-
-Signal handlers were handled for SIGHUP and SIGTERM.
-If dwm receives these signals it calls quit() with
-arg .i = to 1 or 0, respectively.
-
-To restart dwm:
-MOD+CTRL+SHIFT+Q
-or
-kill -HUP dwmpid
-
-To quit dwm cleanly:
-MOD+SHIFT+Q
-or
-kill -TERM dwmpid
 ---
  config.def.h |  1 +
  dwm.1        | 10 ++++++++++
@@ -27,10 +10,10 @@ kill -TERM dwmpid
  3 files changed, 33 insertions(+)
 
 diff --git a/config.def.h b/config.def.h
-index a9ac303..e559429 100644
+index 9efa774..9318edc 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -94,6 +94,7 @@ static Key keys[] = {
+@@ -95,6 +95,7 @@ static const Key keys[] = {
  	TAGKEYS(                        XK_8,                      7)
  	TAGKEYS(                        XK_9,                      8)
  	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
@@ -39,10 +22,10 @@ index a9ac303..e559429 100644
  
  /* button definitions */
 diff --git a/dwm.1 b/dwm.1
-index 13b3729..36a331c 100644
+index 86e73f9..0f3a6ba 100644
 --- a/dwm.1
 +++ b/dwm.1
-@@ -142,6 +142,9 @@ Add/remove all windows with nth tag to/from the view.
+@@ -150,6 +150,9 @@ Add/remove all windows with nth tag to/from the view.
  .TP
  .B Mod1\-Shift\-q
  Quit dwm.
@@ -52,7 +35,7 @@ index 13b3729..36a331c 100644
  .SS Mouse commands
  .TP
  .B Mod1\-Button1
-@@ -155,6 +158,13 @@ Resize focused window while dragging. Tiled windows will be toggled to the float
+@@ -178,6 +181,13 @@ This file is started before any autostart.sh; dwm waits for its termination.
  .SH CUSTOMIZATION
  dwm is customized by creating a custom config.h and (re)compiling the source
  code. This keeps it fast, secure and simple.
@@ -67,19 +50,19 @@ index 13b3729..36a331c 100644
  .BR dmenu (1),
  .BR st (1)
 diff --git a/dwm.c b/dwm.c
-index bb95e26..286eecd 100644
+index abeb337..14aa145 100644
 --- a/dwm.c
 +++ b/dwm.c
-@@ -205,6 +205,8 @@ static void setup(void);
- static void seturgent(Client *c, int urg);
+@@ -209,6 +209,8 @@ static void seturgent(Client *c, int urg);
  static void showhide(Client *c);
  static void sigchld(int unused);
+ static int solitary(Client *c);
 +static void sighup(int unused);
 +static void sigterm(int unused);
  static void spawn(const Arg *arg);
  static void tag(const Arg *arg);
  static void tagmon(const Arg *arg);
-@@ -260,6 +262,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
+@@ -268,6 +270,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
  	[UnmapNotify] = unmapnotify
  };
  static Atom wmatom[WMLast], netatom[NetLast];
@@ -87,7 +70,7 @@ index bb95e26..286eecd 100644
  static int running = 1;
  static Cur *cursor[CurLast];
  static Clr **scheme;
-@@ -1248,6 +1251,7 @@ propertynotify(XEvent *e)
+@@ -1260,6 +1263,7 @@ propertynotify(XEvent *e)
  void
  quit(const Arg *arg)
  {
@@ -95,7 +78,7 @@ index bb95e26..286eecd 100644
  	running = 0;
  }
  
-@@ -1536,6 +1540,9 @@ setup(void)
+@@ -1630,6 +1634,9 @@ setup(void)
  	/* clean up any zombies immediately */
  	sigchld(0);
  
@@ -105,10 +88,11 @@ index bb95e26..286eecd 100644
  	/* init screen */
  	screen = DefaultScreen(dpy);
  	sw = DisplayWidth(dpy, screen);
-@@ -1637,6 +1644,20 @@ sigchld(int unused)
+@@ -1738,6 +1745,20 @@ solitary(Client *c)
+ 	    && NULL != c->mon->lt[c->mon->sellt]->arrange;
  }
  
- void
++void
 +sighup(int unused)
 +{
 +	Arg a = {.i = 1};
@@ -122,18 +106,17 @@ index bb95e26..286eecd 100644
 +	quit(&a);
 +}
 +
-+void
+ void
  spawn(const Arg *arg)
  {
- 	if (arg->v == dmenucmd)
-@@ -2139,6 +2160,7 @@ main(int argc, char *argv[])
- 	setup();
+@@ -2246,6 +2267,7 @@ main(int argc, char *argv[])
  	scan();
+ 	runautostart();
  	run();
 +	if(restart) execvp(argv[0], argv);
  	cleanup();
  	XCloseDisplay(dpy);
  	return EXIT_SUCCESS;
 -- 
-2.7.4
+2.37.2
 

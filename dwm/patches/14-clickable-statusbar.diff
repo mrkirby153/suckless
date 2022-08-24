@@ -1,17 +1,17 @@
-From 2a61f9f4325bcae1a8eb728a45978cafe728736e Mon Sep 17 00:00:00 2001
+From 919f84a73ca290393dae6ab9e3f4688d3b343146 Mon Sep 17 00:00:00 2001
 From: mrkirby153 <mr.austinwhyte@gmail.com>
 Date: Sat, 2 Jan 2021 19:58:37 -0800
 Subject: [PATCH] Clickable statusbar
 
 ---
- dwm.c | 71 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 69 insertions(+), 2 deletions(-)
+ dwm.c | 72 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 70 insertions(+), 2 deletions(-)
 
 diff --git a/dwm.c b/dwm.c
-index 07a83d3..af777d5 100644
+index 54be118..f79d9f0 100644
 --- a/dwm.c
 +++ b/dwm.c
-@@ -216,6 +216,7 @@ static void clientmessage(XEvent *e);
+@@ -209,6 +209,7 @@ static void clientmessage(XEvent *e);
  static void configure(Client *c);
  static void configurenotify(XEvent *e);
  static void configurerequest(XEvent *e);
@@ -19,7 +19,7 @@ index 07a83d3..af777d5 100644
  static Monitor *createmon(void);
  static void destroynotify(XEvent *e);
  static void detach(Client *c);
-@@ -234,6 +235,7 @@ static int getrootptr(int *x, int *y);
+@@ -227,6 +228,7 @@ static int getrootptr(int *x, int *y);
  static long getstate(Window w);
  static unsigned int getsystraywidth();
  static int gettextprop(Window w, Atom atom, char *text, unsigned int size);
@@ -27,31 +27,30 @@ index 07a83d3..af777d5 100644
  static void grabbuttons(Client *c, int focused);
  static void grabkeys(void);
  static void incnmaster(const Arg *arg);
-@@ -284,6 +286,7 @@ static void showhide(Client *c);
- static void sigchld(int unused);
+@@ -278,6 +280,7 @@ static void sigchld(int unused);
+ static int solitary(Client *c);
  static void sighup(int unused);
  static void sigterm(int unused);
 +static void sigdwmblocks(const Arg *arg);
  static void spawn(const Arg *arg);
  static Monitor *systraytomon(Monitor *m);
  static void tag(const Arg *arg);
-@@ -320,6 +323,7 @@ static int xerrordummy(Display *dpy, XErrorEvent *ee);
+@@ -314,6 +317,7 @@ static int xerrordummy(Display *dpy, XErrorEvent *ee);
  static int xerrorstart(Display *dpy, XErrorEvent *ee);
  static void xrdb(const Arg *arg);
  static void zoom(const Arg *arg);
 +static void copyvalidchars(char *text, char *rawtext);
  
- static pid_t getparentprocess(pid_t p);
- static int isdescprocess(pid_t p, pid_t c);
-@@ -331,12 +335,15 @@ static pid_t winpid(Window w);
- static Systray *systray =  NULL;
- static const char broken[] = "broken";
+ /* variables */
+ static const char autostartblocksh[] = "autostart_blocking.sh";
+@@ -323,11 +327,14 @@ static const char broken[] = "broken";
+ static const char dwmdir[] = "dwm";
+ static const char localshare[] = ".local/share";
  static char stext[256];
 +static char rawstext[256];
- static int scanner;
  static int screen;
  static int sw, sh;           /* X display screen geometry width, height */
- static int bh, blw = 0;      /* bar geometry */
+ static int bh;               /* bar height */
  static int enablegaps = 1;   /* enables gaps, used by togglegaps */
  static int lrpad;            /* sum of left and right padding for text */
 +static int dwmblockssig;
@@ -59,11 +58,12 @@ index 07a83d3..af777d5 100644
  static int (*xerrorxlib)(Display *, XErrorEvent *);
  static unsigned int numlockmask = 0;
  static void (*handler[LASTEvent]) (XEvent *) = {
-@@ -613,8 +620,26 @@ buttonpress(XEvent *e)
+@@ -547,8 +554,27 @@ buttonpress(XEvent *e)
  			arg.ui = 1 << i;
- 		} else if (ev->x < x + blw)
+ 		} else if (ev->x < x + TEXTW(selmon->ltsymbol))
  			click = ClkLtSymbol;
--		else if (ev->x > selmon->ww - (int) TEXTW(stext) - getsystraywidth())
+-		else if (ev->x > selmon->ww - (int)TEXTW(stext) - getsystraywidth())
++
 +		else if (ev->x > (x = selmon->ww - (int) TEXTW(stext) - getsystraywidth() + lrpad)) {
  			click = ClkStatusText;
 +
@@ -87,7 +87,7 @@ index 07a83d3..af777d5 100644
  		else
  			click = ClkWinTitle;
  	} else if ((c = wintoclient(ev->window))) {
-@@ -629,6 +654,46 @@ buttonpress(XEvent *e)
+@@ -563,6 +589,46 @@ buttonpress(XEvent *e)
  			buttons[i].func(click == ClkTagBar && buttons[i].arg.i == 0 ? &arg : &buttons[i].arg);
  }
  
@@ -134,7 +134,7 @@ index 07a83d3..af777d5 100644
  void
  checkotherwm(void)
  {
-@@ -2674,8 +2739,10 @@ updatesizehints(Client *c)
+@@ -2665,8 +2731,10 @@ updatesizehints(Client *c)
  void
  updatestatus(void)
  {
@@ -147,5 +147,5 @@ index 07a83d3..af777d5 100644
  	updatesystray();
  }
 -- 
-2.28.0
+2.37.2
 

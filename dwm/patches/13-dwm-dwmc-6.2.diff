@@ -1,14 +1,14 @@
-From 37878ac1859c9e4b7734caafc557e8094191ac0a Mon Sep 17 00:00:00 2001
-From: mrkirby153 <mr.austinwhyte@gmail.com>
-Date: Thu, 10 Sep 2020 12:14:55 -0700
-Subject: [PATCH] dwm-client with xrdb reloading
+From 3c404c36de69d45f9ff480ba528b56def128d5cb Mon Sep 17 00:00:00 2001
+From: Nihal Jere <noocsharp@gmail.com>
+Date: Sat, 21 Mar 2020 15:16:49 -0500
+Subject: [PATCH] dwm-client
 
 ---
  Makefile     |  2 +-
  config.def.h | 70 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- dwm.c        | 55 +++++++++++++++++++++++++++++++++++++++--
+ dwm.c        | 56 +++++++++++++++++++++++++++++++++++++++--
  dwmc         | 40 ++++++++++++++++++++++++++++++
- 4 files changed, 164 insertions(+), 3 deletions(-)
+ 4 files changed, 165 insertions(+), 3 deletions(-)
  create mode 100755 dwmc
 
 diff --git a/Makefile b/Makefile
@@ -25,10 +25,10 @@ index 77bcbc0..f837f5c 100644
  	mkdir -p ${DESTDIR}${MANPREFIX}/man1
  	sed "s/VERSION/${VERSION}/g" < dwm.1 > ${DESTDIR}${MANPREFIX}/man1/dwm.1
 diff --git a/config.def.h b/config.def.h
-index fdefbd1..4b0430e 100644
+index 0029764..245e238 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -148,3 +148,73 @@ static Button buttons[] = {
+@@ -147,3 +147,73 @@ static const Button buttons[] = {
  	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
  };
  
@@ -103,10 +103,10 @@ index fdefbd1..4b0430e 100644
 +	{ "setlayoutex",    setlayoutex },
 +};
 diff --git a/dwm.c b/dwm.c
-index 94b21a0..059e2be 100644
+index 17fd1f4..54be118 100644
 --- a/dwm.c
 +++ b/dwm.c
-@@ -145,6 +145,11 @@ typedef struct {
+@@ -140,6 +140,11 @@ typedef struct {
  	const Arg arg;
  } Key;
  
@@ -118,7 +118,7 @@ index 94b21a0..059e2be 100644
  typedef struct {
  	const char *symbol;
  	void (*arrange)(Monitor *);
-@@ -202,6 +207,7 @@ static void arrange(Monitor *m);
+@@ -195,6 +200,7 @@ static void arrange(Monitor *m);
  static void arrangemon(Monitor *m);
  static void attach(Client *c);
  static void attachstack(Client *c);
@@ -126,7 +126,7 @@ index 94b21a0..059e2be 100644
  static void buttonpress(XEvent *e);
  static void checkotherwm(void);
  static void cleanup(void);
-@@ -1270,6 +1276,49 @@ keypress(XEvent *e)
+@@ -1211,6 +1217,49 @@ keypress(XEvent *e)
  			keys[i].func(&(keys[i].arg));
  }
  
@@ -176,11 +176,19 @@ index 94b21a0..059e2be 100644
  void
  killclient(const Arg *arg)
  {
-@@ -1546,8 +1595,10 @@ propertynotify(XEvent *e)
- 		resizebarwin(selmon);
+@@ -1471,6 +1520,7 @@ propertynotify(XEvent *e)
+ 	Window trans;
+ 	XPropertyEvent *ev = &e->xproperty;
+ 
++
+ 	if ((c = wintosystrayicon(ev->window))) {
+ 		if (ev->atom == XA_WM_NORMAL_HINTS) {
+ 			updatesizehints(c);
+@@ -1482,8 +1532,10 @@ propertynotify(XEvent *e)
  		updatesystray();
  	}
--	if ((ev->window == root) && (ev->atom == XA_WM_NAME))
+ 
+-    if ((ev->window == root) && (ev->atom == XA_WM_NAME))
 -		updatestatus();
 +	if ((ev->window == root) && (ev->atom == XA_WM_NAME)) {
 +		if (!fake_signal())
@@ -191,7 +199,7 @@ index 94b21a0..059e2be 100644
  	else if ((c = wintoclient(ev->window))) {
 diff --git a/dwmc b/dwmc
 new file mode 100755
-index 0000000..a724911
+index 0000000..5ff8dbc
 --- /dev/null
 +++ b/dwmc
 @@ -0,0 +1,40 @@
@@ -204,7 +212,7 @@ index 0000000..a724911
 +case $# in
 +1)
 +	case $1 in
-+	setlayout | view | viewall | togglebar | togglefloating | zoom | killclient | quit | xrdb)
++	setlayout | view | viewall | togglebar | togglefloating | zoom | killclient | quit)
 +		signal $1
 +		;;
 +	*)
@@ -236,5 +244,5 @@ index 0000000..a724911
 +	;;
 +esac
 -- 
-2.28.0
+2.37.2
 
