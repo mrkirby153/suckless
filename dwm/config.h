@@ -30,7 +30,8 @@ static char *colors[][3] = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "", "ﭮ", "" };
+/*                             firefox  terminal    folder  code gaming video   mail discord music*/
+static const char *tags[] = { "",      "",        "",    "", "",   "",    "󰇮", "󰙯",   "" };
 
 #define TAG_BROWSER_MASK 	1 << 0
 #define TAG_TERM_MASK 		1 << 1
