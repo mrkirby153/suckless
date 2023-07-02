@@ -14,7 +14,7 @@ pkgver=r41.7824597
 pkgrel=1
 arch=('any')
 license=('MIT')
-makedepends=('git' 'make' 'fontconfig' 'freetype2' 'xorgproto' 'libxft-bgra' 'libxinerama') # 'bzr', 'git', 'mercurial' or 'subversion'
+makedepends=('git' 'make' 'fontconfig' 'freetype2' 'xorgproto' 'libxft' 'libxinerama') # 'bzr', 'git', 'mercurial' or 'subversion'
 source=('suckless::git+https://github.com/mrkirby153/suckless.git')
 noextract=()
 md5sums=('SKIP')
@@ -30,6 +30,12 @@ prepare() {
 
 	for _pkg in ${_pkgs[*]}; do
 		cd "$srcdir/suckless/$_pkg"
+		if ! git config user.name; then
+			git config user.name "builder"
+		fi
+		if ! git config user.email; then
+			git config user.email "builder@$(hostname)"
+		fi
 		./setup.sh
 	done
 }

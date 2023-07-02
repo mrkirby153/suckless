@@ -12,6 +12,8 @@ fi
 # Apply patches
 cd source
 
+git config commit.gpgsign false
+
 # reset everything
 echo "Cleaning up working tree"
 git reset --hard origin/HEAD
