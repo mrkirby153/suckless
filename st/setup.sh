@@ -14,14 +14,13 @@ cd source
 
 # reset everything
 echo "Cleaning up working tree"
-git reset --hard HEAD
+git reset --hard origin/HEAD
 git clean -df *
 
 echo "Applying patches"
 
 for file in ../patches/*.diff; do
-    echo "Aplying $file"
-    patch -p1 < $file
+    git am -3 --whitespace=fix "$file"
 done
 
 echo "Cleaning up original files"

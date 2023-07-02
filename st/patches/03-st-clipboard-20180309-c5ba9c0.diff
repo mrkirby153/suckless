@@ -1,0 +1,26 @@
+From 1f5dc6cd4f440f7ee1b6d2e1520a17bfeffffc94 Mon Sep 17 00:00:00 2001
+From: mrkirby153 <mr.austinwhyte@gmail.com>
+Date: Sun, 2 Jul 2023 12:49:42 -0700
+Subject: [PATCH] clipboard: Copy to clipboard
+
+https://st.suckless.org/patches/clipboard/
+---
+ x.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/x.c b/x.c
+index 66c43e0..0cf1165 100644
+--- a/x.c
++++ b/x.c
+@@ -688,6 +688,8 @@ setsel(char *str, Time t)
+ 	XSetSelectionOwner(xw.dpy, XA_PRIMARY, xw.win, t);
+ 	if (XGetSelectionOwner(xw.dpy, XA_PRIMARY) != xw.win)
+ 		selclear();
++
++	xclipcopy();
+ }
+ 
+ void
+-- 
+2.41.0
+
