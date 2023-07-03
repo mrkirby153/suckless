@@ -10,7 +10,7 @@
 pkgbase=mrkirby153-suckless
 pkgname=(mrkirby153-st-git mrkirby153-dwm-git mrkirby153-dmenu-git)
 _pkgs=('st' 'dwm' 'dmenu')
-pkgver=r41.7824597
+pkgver=r52.c3ef35e
 pkgrel=1
 arch=('any')
 license=('MIT')
@@ -29,7 +29,7 @@ prepare() {
 	git submodule update --init --force
 
 	for _pkg in ${_pkgs[*]}; do
-		cd "$srcdir/suckless/$_pkg"
+		pushd "$srcdir/suckless/$_pkg"
 		if ! git config user.name; then
 			git config user.name "builder"
 		fi
@@ -37,6 +37,14 @@ prepare() {
 			git config user.email "builder@$(hostname)"
 		fi
 		./setup.sh
+
+		if [ "$_pkg" == "st" ]; then
+			pushd source
+			sed -i '/tic /d' Makefile
+			popd
+		fi
+
+		popd
 	done
 }
 
