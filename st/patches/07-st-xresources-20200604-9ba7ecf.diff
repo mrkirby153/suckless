@@ -1,18 +1,18 @@
-From 2752a599ee01305a435729bfacf43b1dde7cf0ef Mon Sep 17 00:00:00 2001
+From 15deceb3d985131f2cf9a35c9e2f7635d0144b39 Mon Sep 17 00:00:00 2001
 From: Benji Encalada Mora <benji@encalada.dev>
 Date: Thu, 4 Jun 2020 00:41:10 -0500
 Subject: [PATCH] fix: replace xfps and actionfps variables
 
 ---
  config.def.h | 36 ++++++++++++++++++++++++
- x.c          | 78 +++++++++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 110 insertions(+), 4 deletions(-)
+ x.c          | 79 +++++++++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 111 insertions(+), 4 deletions(-)
 
 diff --git a/config.def.h b/config.def.h
-index 6f05dce..9b99782 100644
+index ab9bb11..794ae45 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -168,6 +168,42 @@ static unsigned int defaultattr = 11;
+@@ -185,6 +185,42 @@ static unsigned int defaultattr = 11;
   */
  static uint forcemousemod = ShiftMask;
  
@@ -56,7 +56,7 @@ index 6f05dce..9b99782 100644
   * Internal mouse shortcuts.
   * Beware that overloading Button1 will disable the selection.
 diff --git a/x.c b/x.c
-index 210f184..76f167f 100644
+index c528b03..013204e 100644
 --- a/x.c
 +++ b/x.c
 @@ -14,6 +14,7 @@
@@ -67,52 +67,53 @@ index 210f184..76f167f 100644
  
  char *argv0;
  #include "arg.h"
-@@ -45,6 +46,19 @@ typedef struct {
+@@ -48,6 +49,21 @@ typedef struct
  	signed char appcursor; /* application cursor */
  } Key;
  
 +/* Xresources preferences */
-+enum resource_type {
++enum resource_type
++{
 +	STRING = 0,
 +	INTEGER = 1,
 +	FLOAT = 2
 +};
 +
-+typedef struct {
++typedef struct
++{
 +	char *name;
 +	enum resource_type type;
 +	void *dst;
 +} ResourcePref;
 +
  /* X modifiers */
- #define XK_ANY_MOD    UINT_MAX
- #define XK_NO_MOD     0
-@@ -828,8 +842,8 @@ xclear(int x1, int y1, int x2, int y2)
- void
- xhints(void)
+ #define XK_ANY_MOD UINT_MAX
+ #define XK_NO_MOD 0
+@@ -898,8 +914,8 @@ void xclear(int x1, int y1, int x2, int y2)
+ 
+ void xhints(void)
  {
 -	XClassHint class = {opt_name ? opt_name : termname,
--	                    opt_class ? opt_class : termname};
+-						opt_class ? opt_class : termname};
 +	XClassHint class = {opt_name ? opt_name : "st",
-+	                    opt_class ? opt_class : "St"};
++						opt_class ? opt_class : "St"};
  	XWMHints wm = {.flags = InputHint, .input = 1};
  	XSizeHints *sizeh;
  
-@@ -1104,8 +1118,6 @@ xinit(int cols, int rows)
- 	pid_t thispid = getpid();
- 	XColor xmousefg, xmousebg;
+@@ -1187,8 +1203,6 @@ void xinit(int cols, int rows)
+ 	XWindowAttributes attr;
+ 	XVisualInfo vis;
  
 -	if (!(xw.dpy = XOpenDisplay(NULL)))
 -		die("can't open display\n");
  	xw.scr = XDefaultScreen(xw.dpy);
- 	xw.vis = XDefaultVisual(xw.dpy, xw.scr);
  
-@@ -1964,6 +1976,59 @@ run(void)
+ 	if (!(opt_embed && (parent = strtol(opt_embed, NULL, 0))))
+@@ -2154,6 +2168,58 @@ void run(void)
  	}
  }
  
-+int
-+resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst)
++int resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst)
 +{
 +	char **sdst = dst;
 +	int *idst = dst;
@@ -124,16 +125,17 @@ index 210f184..76f167f 100644
 +	XrmValue ret;
 +
 +	snprintf(fullname, sizeof(fullname), "%s.%s",
-+			opt_name ? opt_name : "st", name);
++			 opt_name ? opt_name : "st", name);
 +	snprintf(fullclass, sizeof(fullclass), "%s.%s",
-+			opt_class ? opt_class : "St", name);
++			 opt_class ? opt_class : "St", name);
 +	fullname[sizeof(fullname) - 1] = fullclass[sizeof(fullclass) - 1] = '\0';
 +
 +	XrmGetResource(db, fullname, fullclass, &type, &ret);
 +	if (ret.addr == NULL || strncmp("String", type, 64))
 +		return 1;
 +
-+	switch (rtype) {
++	switch (rtype)
++	{
 +	case STRING:
 +		*sdst = ret.addr;
 +		break;
@@ -147,8 +149,7 @@ index 210f184..76f167f 100644
 +	return 0;
 +}
 +
-+void
-+config_init(void)
++void config_init(void)
 +{
 +	char *resm;
 +	XrmDatabase db;
@@ -164,15 +165,15 @@ index 210f184..76f167f 100644
 +		resource_load(db, p->name, p->type, p->dst);
 +}
 +
- void
- usage(void)
+ void usage(void)
  {
-@@ -2037,6 +2102,11 @@ run:
+ 	die("usage: %s [-aiv] [-c class] [-f font] [-g geometry]"
+@@ -2231,6 +2297,11 @@ run:
  
  	setlocale(LC_CTYPE, "");
  	XSetLocaleModifiers("");
 +
-+	if(!(xw.dpy = XOpenDisplay(NULL)))
++	if (!(xw.dpy = XOpenDisplay(NULL)))
 +		die("Can't open display\n");
 +
 +	config_init();
@@ -180,5 +181,5 @@ index 210f184..76f167f 100644
  	rows = MAX(rows, 1);
  	tnew(cols, rows);
 -- 
-2.26.2
+2.44.1
 
