@@ -2,3 +2,5 @@ pkg/
 src/
 suckless/
 *.tar.zst
+result
+result-*

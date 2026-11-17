@@ -1,0 +1,35 @@
+From d77df0b81272c41e1fc7f2c159977f548417801a Mon Sep 17 00:00:00 2001
+From: mrkirby153 <mr.austinwhyte@gmail.com>
+Date: Mon, 16 Nov 2026 21:24:09 -0800
+Subject: [PATCH 2/2] Publish _NET_ACTIVE_WINDOW for globally active clients
+
+---
+ dwm.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/dwm.c b/dwm.c
+index 18d8445..dabe605 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -1993,13 +1993,15 @@ sendevent(Window w, Atom proto, int mask, long d0, long d1, long d2, long d3, lo
+ void
+ setfocus(Client *c)
+ {
+-	if (!c->neverfocus) {
++	int takes;
++
++	if (!c->neverfocus)
+ 		XSetInputFocus(dpy, c->win, RevertToPointerRoot, CurrentTime);
++	takes = sendevent(c->win, wmatom[WMTakeFocus], NoEventMask, wmatom[WMTakeFocus], CurrentTime, 0, 0, 0);
++	if (!c->neverfocus || takes)
+ 		XChangeProperty(dpy, root, netatom[NetActiveWindow],
+ 			XA_WINDOW, 32, PropModeReplace,
+ 			(unsigned char *) &(c->win), 1);
+-	}
+-	sendevent(c->win, wmatom[WMTakeFocus], NoEventMask, wmatom[WMTakeFocus], CurrentTime, 0, 0, 0);
+ }
+ 
+ void
+-- 
+2.54.0
+

@@ -1,0 +1,35 @@
+From 39bbcdbeca2ee29923519e92b9ca2f10da3c5764 Mon Sep 17 00:00:00 2001
+From: mrkirby153 <mr.austinwhyte@gmail.com>
+Date: Mon, 16 Nov 2026 21:38:04 -0800
+Subject: [PATCH 1/2] Add opt-in exact class and instance matching for rules
+
+---
+ dwm.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/dwm.c b/dwm.c
+index 0697aa8..18d8445 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -185,6 +185,7 @@ typedef struct {
+ 	unsigned int switchtotag;
+ 	int isfloating;
+ 	int monitor;
++	int exact;
+ } Rule;
+ 
+ typedef struct Systray   Systray;
+@@ -402,8 +403,8 @@ applyrules(Client *c)
+ 	for (i = 0; i < LENGTH(rules); i++) {
+ 		r = &rules[i];
+ 		if ((!r->title || strstr(c->name, r->title))
+-		&& (!r->class || strstr(class, r->class))
+-		&& (!r->instance || strstr(instance, r->instance)))
++		&& (!r->class || (r->exact ? !strcmp(class, r->class) : strstr(class, r->class) != NULL))
++		&& (!r->instance || (r->exact ? !strcmp(instance, r->instance) : strstr(instance, r->instance) != NULL)))
+ 		{
+ 			c->isfloating = r->isfloating;
+ 			c->tags |= r->tags;
+-- 
+2.54.0
+
