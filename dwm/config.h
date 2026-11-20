@@ -67,13 +67,13 @@ static const Rule rules[] = {
 
     {"Spotify",         	NULL,           NULL,       TAG_MUSIC_MASK, 	0,			0,          -1 },
 
-	{ "St",      			"st",     		NULL,       TAG_TERM_MASK,      1,			0,          -1 },
+	{ "St",      			"st",     		NULL,       TAG_TERM_MASK,      1,			0,          -1,		1 },
     { "com.mitchellh.ghostty", "ghostty", NULL, TAG_TERM_MASK, 1, 0, -1 },
 
 	{"firefox",				NULL,			NULL,		TAG_BROWSER_MASK,	1,			0,			-1 },
 
 	{"VSCodium",			NULL,			NULL,		TAG_CODE_MASK,		1,			0,			-1 },
-	{"Code",    			NULL,			NULL,		TAG_CODE_MASK,		1,			0,			-1 },
+	{"com.microsoft.VSCode",NULL,   		NULL,		TAG_CODE_MASK,		1,			0,			-1 },
 	{"jetbrains-idea",		NULL,			NULL,		TAG_CODE_MASK,		1,			0,			-1 },
 	{"jetbrains-phpstorm",	NULL,			NULL,		TAG_CODE_MASK,		1,			0,			-1 },
 
